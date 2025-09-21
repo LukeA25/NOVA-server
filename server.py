@@ -19,7 +19,8 @@ async def process_audio(file: UploadFile):
     with open(tmp_path, "rb") as f:
         transcript = client.audio.transcriptions.create(
             model="gpt-4o-transcribe",
-            file=f
+            file=f,
+            language="en"
         )
     text = transcript.text
 
@@ -34,7 +35,7 @@ async def process_audio(file: UploadFile):
     speech_file = tmp_path.replace(".wav", "_reply.wav")
     with client.audio.speech.with_streaming_response.create(
         model="gpt-4o-mini-tts",
-        voice="alloy",
+        voice="echo",
         input=reply_text,
     ) as response:
         response.stream_to_file(speech_file)
