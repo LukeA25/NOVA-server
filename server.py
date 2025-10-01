@@ -23,13 +23,28 @@ async def process_audio(file: UploadFile):
             language="en"
         )
     text = transcript.text
+    print(text);
 
     # Step 2: AI reasoning
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
-        messages=[{"role": "user", "content": text}]
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are Nova, a smart, friendly, and conversational AI desk assistant. "
+                    "Your tone is calm, helpful, slightly witty like JARVIS from Iron Man, "
+                    "but always polite and precise like Alexa or Google Assistant. "
+                    "You live on a desk, answer user questions, respond to voice commands, "
+                    "and provide useful information or perform tasks."
+                )
+            },
+            {"role": "user", "content": text}
+            ]
     )
     reply_text = completion.choices[0].message.content
+    print("Replying:")
+    print(reply_text)
 
     # Step 3: Text-to-speech
     speech_file = tmp_path.replace(".wav", "_reply.wav")
